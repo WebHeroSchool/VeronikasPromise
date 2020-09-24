@@ -2,18 +2,6 @@ const body = document.body;
 const url = window.location.toString();
 let requestFromPromise;
 
-document.body.onload = function() {
-
-  setTimeout(function() {
-    let preloader = document.getElementById('preloader');
-
-    if (!preloader.classList.contains('done')) {
-    	preloader.classList.add('done');
-    }
-  }, 2000)
-
-};
-
 const getUsernameFromUrl = (url) => {
   let splitOfUrl = url.split('=');
   let stringOfUsername  = splitOfUrl[1];
@@ -24,8 +12,10 @@ const getUsernameFromUrl = (url) => {
 };
 
 const getDate = new Promise((resolve, reject) =>
-  setTimeout(() => new Date ? resolve(new Date) : reject(new Error('Время неизвестно')), 2000)
+  setTimeout(() => new Date ? resolve(new Date) : reject(new Error('Время неизвестно')), 3000)
 );
+
+let preloader = document.getElementById('preloader');
 
 const getRequest = fetch(`https://api.github.com/users/${getUsernameFromUrl(url)}`);
 
@@ -36,6 +26,7 @@ Promise.all([getRequest, getDate])
   })
   .then(res => requestFromPromise.json())
   .then(json => {
+    preloader.style.display = 'none';
     avatarOfUser = json.avatar_url;
     bioOfUser = json.bio;
     urlOfUser = json.url;
